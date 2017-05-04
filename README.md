@@ -19,19 +19,10 @@ This bot needs to be self-hosted and requires NodeJS 7
 4. Go to the config folder, rename `example-config.ini` to `config.ini` and fill in all fields, this is where you use your bot token.
 5. Go back to the main folder and run `npm start`.
 
-Contact me in EVE Online: `Ionaru Otsada` or on Discord: `Ionaru#3801` is you need any assistance.
-
-## Screenshots
-The bot in action
-
-![Image of price command](https://cloud.githubusercontent.com/assets/3472373/25491154/668c3504-2b6f-11e7-8419-2ff21500e9b8.png)
-
-![Image of sell command](https://cloud.githubusercontent.com/assets/3472373/25491068/2213ccc0-2b6f-11e7-8562-46dbf7587596.png)
-
-![Image of price command with wrong spelling](https://cloud.githubusercontent.com/assets/3472373/25491110/4227c17e-2b6f-11e7-8609-46ee6e5ad291.png)
+Contact me in EVE Online: `Ionaru Otsada` or on Discord: `Ionaru#3801` if you need any assistance.
 
 ## Feature requests
-Please open an [issue](https://github.com/Ionaru/MarketBot/issues/new) if you have any feature ideas for this bot
+Please open an [issue](https://github.com/Ionaru/PingBot/issues/new) if you have any feature ideas for this bot
 or are missing any functionality.
 
 Alternatively you can contact me in EVE Online: `Ionaru Otsada`, or on Discord: `Ionaru#3801`.
