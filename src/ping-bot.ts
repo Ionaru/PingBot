@@ -210,80 +210,90 @@ function opMessageInfo(operation: FleetUpOperationData) {
 }
 
 function sendNewOpPing(operation: FleetUpOperationData) {
-  let message = '@everyone';
-  message += '\n';
-  message += '**A new operation has been posted!**';
-  message += '\n\n';
-  message += opMessageInfo(operation);
+  if (botConfig.get('operationCreated')) {
+    let message = '@everyone';
+    message += '\n';
+    message += '**A new operation has been posted!**';
+    message += '\n\n';
+    message += opMessageInfo(operation);
 
-  myPingChannel.send(message).catch((error) => {
-    logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
-    logger.error(error);
-  });
+    myPingChannel.send(message).catch((error) => {
+      logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
+      logger.error(error);
+    });
+  }
 }
 
 async function sendOpRemovedPing(operation: FleetUpOperationData) {
-  const momentString = getFleetMoment(parseFleetUpTime(operation.Start));
+  if (botConfig.get('operationRemoved')) {
+    const momentString = getFleetMoment(parseFleetUpTime(operation.Start));
 
-  let message = '@everyone';
-  message += '\n';
-  message += '**An operation has been cancelled!**';
-  message += '\n\n';
-  if (operation.Subject === '(No Name)') {
-    message += `The fleet was scheduled to start on **${momentString} EVE time**\n\n`;
-  } else {
-    message += `**${operation.Subject}** was scheduled to start on **${momentString} EVE time**\n\n`;
-  }
-
-  if (operation.Url) {
-    message += `More info on <${operation.Url}>`;
+    let message = '@everyone';
     message += '\n';
-  }
-  message += `FleetUp link: <https://fleet-up.com/Operation#${operation.Id}>`;
+    message += '**An operation has been cancelled!**';
+    message += '\n\n';
+    if (operation.Subject === '(No Name)') {
+      message += `The fleet was scheduled to start on **${momentString} EVE time**\n\n`;
+    } else {
+      message += `**${operation.Subject}** was scheduled to start on **${momentString} EVE time**\n\n`;
+    }
 
-  await myPingChannel.send(message).catch((error) => {
-    logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
-    logger.error(error);
-  });
+    if (operation.Url) {
+      message += `More info on <${operation.Url}>`;
+      message += '\n';
+    }
+    message += `FleetUp link: <https://fleet-up.com/Operation#${operation.Id}>`;
+
+    await myPingChannel.send(message).catch((error) => {
+      logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
+      logger.error(error);
+    });
+  }
 }
 
 function sendOpEditPing(operation: FleetUpOperationData) {
-  let message = '@everyone';
-  message += '\n';
-  message += '**A posted operation was edited, re-check the time and place!**';
-  message += '\n\n';
-  message += opMessageInfo(operation);
+  if (botConfig.get('operationEdited')) {
+    let message = '@everyone';
+    message += '\n';
+    message += '**A posted operation was edited, re-check the time and place!**';
+    message += '\n\n';
+    message += opMessageInfo(operation);
 
-  myPingChannel.send(message).catch((error) => {
-    logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
-    logger.error(error);
-  });
+    myPingChannel.send(message).catch((error) => {
+      logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
+      logger.error(error);
+    });
+  }
 }
 
 function sendAheadPing(operation: FleetUpOperationData) {
-  let message = '@everyone';
-  message += '\n';
-  message += '**An operation will start in 2 hours!**';
-  message += '\n\n';
-  message += opMessageInfo(operation);
+  if (botConfig.get('operationStartSoon')) {
+    let message = '@everyone';
+    message += '\n';
+    message += '**An operation will start in 2 hours!**';
+    message += '\n\n';
+    message += opMessageInfo(operation);
 
-  myPingChannel.send(message).catch((error) => {
-    logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
-    logger.error(error);
-  });
+    myPingChannel.send(message).catch((error) => {
+      logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
+      logger.error(error);
+    });
+  }
 }
 
 function sendOpStartPing(operation: FleetUpOperationData) {
-  let message = '@everyone';
-  message += '\n';
-  message += '**An operation is underway, join join join!**';
-  message += '\n\n';
-  message += opMessageInfo(operation);
+  if (botConfig.get('operationStarting')) {
+    let message = '@everyone';
+    message += '\n';
+    message += '**An operation is underway, join join join!**';
+    message += '\n\n';
+    message += opMessageInfo(operation);
 
-  myPingChannel.send(message).catch((error) => {
-    logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
-    logger.error(error);
-  });
+    myPingChannel.send(message).catch((error) => {
+      logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
+      logger.error(error);
+    });
+  }
 }
 
 activate().then();
