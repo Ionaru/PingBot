@@ -1,0 +1,28 @@
+{
+  "name": "PingBot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js",
+    "lint": "tslint --type-check -c tslint.json \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "discord.js": "^11.0.0",
+    "ini": "^1.3.4",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.18.1",
+    "node-fetch": "^1.6.3",
+    "ts-node": "^3.0.2",
+    "typescript": "^2.2.2",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
+  },
+  "devDependencies": {
+    "@types/mkdirp": "^0.3.29",
+    "@types/node": "^7.0.13",
+    "@types/node-fetch": "^1.6.7",
+    "@types/winston": "^2.3.0",
+    "tslint": "^4.5.1"
+  },
+  "license": "MIT"
+}
