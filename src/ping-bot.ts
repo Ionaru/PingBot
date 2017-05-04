@@ -2,7 +2,7 @@ import * as Discord from 'discord.js';
 import * as moment from 'moment';
 import { FleetUpData, FleetUpOperationData, OperationData } from './typings';
 import { Logger, logger } from './helpers/program-logger';
-import { botConfig, Config } from './helpers/config';
+import { Config } from './helpers/config';
 import fetch from 'node-fetch';
 import path = require('path');
 import programLogger = require('./helpers/program-logger');
@@ -12,6 +12,8 @@ import configService = require('./helpers/config');
 import Timer = NodeJS.Timer;
 
 let client: Discord.Client;
+
+let botConfig: Config;
 
 const operations: OperationData = {};
 
@@ -27,7 +29,7 @@ async function activate() {
 
   logger.info('Bot has awoken, loading configuration');
 
-  configService.botConfig = new Config('config');
+  botConfig = new Config('config');
 
   const token = botConfig.get('token');
 
