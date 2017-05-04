@@ -140,21 +140,19 @@ function scheduleWarnings() {
   for (const operationId in operations) {
     if (operations.hasOwnProperty(operationId)) {
       const operation = operations[operationId];
-      if (operation) {
-        const timeTillOpStart = parseFleetUpTime(operation.Start).getTime() - Date.now();
-        if (pings[operationId]) {
-          for (const timer of pings[operationId]) {
-            clearTimeout(timer);
-          }
-        } else {
-          pings[operationId] = [];
+      const timeTillOpStart = parseFleetUpTime(operation.Start).getTime() - Date.now();
+      if (pings[operationId]) {
+        for (const timer of pings[operationId]) {
+          clearTimeout(timer);
         }
-        if (timeTillOpStart - aheadPingTime > 0) {
-          pings[operationId].push(setTimeout(sendAheadPing, timeTillOpStart - aheadPingTime, operation));
-        }
-        if (timeTillOpStart > 0) {
-          pings[operationId].push(setTimeout(sendOpStartPing, timeTillOpStart, operation));
-        }
+      } else {
+        pings[operationId] = [];
+      }
+      if (timeTillOpStart - aheadPingTime > 0) {
+        pings[operationId].push(setTimeout(sendAheadPing, timeTillOpStart - aheadPingTime, operation));
+      }
+      if (timeTillOpStart > 0) {
+        pings[operationId].push(setTimeout(sendOpStartPing, timeTillOpStart, operation));
       }
     }
   }
