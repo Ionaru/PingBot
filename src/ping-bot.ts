@@ -256,7 +256,7 @@ async function sendOpRemovedPing(operation: FleetUpOperationData) {
     message += '\n';
     message += '**An operation has been cancelled!**';
     message += '\n\n';
-    if (config.get('showDateTime')) {
+    if (config.get('showFleetNameTime')) {
       if (operation.Subject === '(No Name)') {
         message += `The fleet was scheduled to start on **${momentString} EVE time**\n\n`;
       } else {
