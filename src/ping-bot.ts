@@ -13,7 +13,7 @@ import Timer = NodeJS.Timer;
 
 let client: Discord.Client;
 
-let botConfig: Config;
+let config: Config;
 
 const operations: OperationData = {};
 
@@ -29,9 +29,9 @@ async function activate() {
 
   logger.info('Bot has awoken, loading configuration');
 
-  botConfig = new Config('config');
+  config = new Config('config');
 
-  const token = botConfig.get('token');
+  const token = config.get('token');
 
   client = new Discord.Client();
   client.login(token);
@@ -45,12 +45,13 @@ async function announceReady() {
   if (myPingChannel) {
     logger.info(`Server: ${myPingChannel.guild.name}`);
     logger.info(`Channel: ${myPingChannel.name}`);
-    const fleetUpAppKey = botConfig.get('app-key');
-    const fleetUpUserId = botConfig.get('user-id');
-    const fleetUpApiCode = botConfig.get('api-code');
+    const fleetUpAppKey = config.get('app-key');
+    const fleetUpUserId = config.get('user-id');
+    const fleetUpApiCode = config.get('api-code');
     const fleetUpHost = 'http://api.fleet-up.com';
     const fleetUpPath = 'Api.svc';
     const url = `${fleetUpHost}/${fleetUpPath}/${fleetUpAppKey}/${fleetUpUserId}/${fleetUpApiCode}/Operations`;
+    logger.info(`API: ${url}`);
     await fetchOperations(url, true);
     scheduleWarnings();
     setInterval(fetchOperations, checkInterval, url);
@@ -161,7 +162,7 @@ function scheduleWarnings() {
 }
 
 function getPingChannel() {
-  const pingChannelId = botConfig.get('channel-id');
+  const pingChannelId = config.get('channel-id');
   for (const guild of client.guilds.array()) {
     for (const channel of guild.channels.array()) {
       if (channel.id === pingChannelId && channel.type === 'text') {
@@ -182,37 +183,58 @@ function getFleetMoment(timeDate: Date): string {
 
 function opMessageInfo(operation: FleetUpOperationData) {
   let message = '';
-  const momentString = getFleetMoment(parseFleetUpTime(operation.Start));
 
-  if (operation.Subject === '(No Name)') {
-    message += `This fleet starts on **${momentString} EVE time**`;
-  } else {
-    message += `**${operation.Subject}** starts on **${momentString} EVE time**`;
-  }
-
-  message += '\n\n';
-
-  if (operation.Location && operation.LocationInfo) {
-    message += `Fleet forms in \`${operation.Location}\` - \`${operation.LocationInfo}\``;
-    message += '\n\n';
-  } else if (operation.Location) {
-    message += `Fleet forms in \`${operation.Location}\``;
+  if (config.get('showFleetNameTime')) {
+    const momentString = getFleetMoment(parseFleetUpTime(operation.Start));
+    if (operation.Subject !== '(No Name)') {
+      message += `**${operation.Subject}** starts on **${momentString} EVE time**`;
+    } else {
+      message += `This fleet starts on **${momentString} EVE time**`;
+    }
     message += '\n\n';
   }
 
-  if (operation.Url) {
-    message += `More info on <${operation.Url}>`;
-    message += '\n';
+  if (config.get('showLocation')) {
+    if (operation.Location && operation.LocationInfo) {
+      message += `Fleet forms in **${operation.Location}** - **${operation.LocationInfo}**`;
+      message += '\n\n';
+    } else if (operation.Location) {
+      message += `Fleet forms in **${operation.Location}**`;
+      message += '\n\n';
+    }
   }
 
-  message += `FleetUp link: <https://fleet-up.com/Operation#${operation.Id}>`;
-  message += '\n\n';
+  if (config.get('showDoctrines')) {
+    if (operation.Doctrines.length) {
+      const doctrineNames = [];
+      for (const doctrine of operation.Doctrines) {
+        doctrineNames.push(doctrine.Name);
+      }
+      message += `Doctrine: **${doctrineNames.join(`** / **`)}**`;
+      message += '\n\n';
+    }
+  }
+
+  if (config.get('showURL')) {
+    if (operation.Url) {
+      message += `More info on **<${operation.Url}>**`;
+      message += '\n';
+    }
+  }
+
+  if (config.get('showFleetUpLink')) {
+    message += `FleetUp link: **<https://fleet-up.com/Operation#${operation.Id}>**`;
+  }
+
+  if(message.length === 0) {
+    logger.warn(`Ping for fleet ${operation.Subject} (${operation.Id}) contained no information and is probably not useful.`);
+  }
 
   return message;
 }
 
 function sendNewOpPing(operation: FleetUpOperationData) {
-  if (botConfig.get('operationCreated')) {
+  if (config.get('operationCreated')) {
     let message = '@everyone';
     message += '\n';
     message += '**A new operation has been posted!**';
@@ -227,24 +249,30 @@ function sendNewOpPing(operation: FleetUpOperationData) {
 }
 
 async function sendOpRemovedPing(operation: FleetUpOperationData) {
-  if (botConfig.get('operationRemoved')) {
+  if (config.get('operationRemoved')) {
     const momentString = getFleetMoment(parseFleetUpTime(operation.Start));
 
     let message = '@everyone';
     message += '\n';
     message += '**An operation has been cancelled!**';
     message += '\n\n';
-    if (operation.Subject === '(No Name)') {
-      message += `The fleet was scheduled to start on **${momentString} EVE time**\n\n`;
-    } else {
-      message += `**${operation.Subject}** was scheduled to start on **${momentString} EVE time**\n\n`;
+    if (config.get('showDateTime')) {
+      if (operation.Subject === '(No Name)') {
+        message += `The fleet was scheduled to start on **${momentString} EVE time**\n\n`;
+      } else {
+        message += `**${operation.Subject}** was scheduled to start on **${momentString} EVE time**\n\n`;
+      }
     }
 
-    if (operation.Url) {
-      message += `More info on <${operation.Url}>`;
-      message += '\n';
+    if (config.get('showURL')) {
+      if (operation.Url) {
+        message += `More info on <${operation.Url}>`;
+        message += '\n';
+      }
     }
-    message += `FleetUp link: <https://fleet-up.com/Operation#${operation.Id}>`;
+    if (config.get('showFleetUpLink')) {
+      message += `FleetUp link: <https://fleet-up.com/Operation#${operation.Id}>`;
+    }
 
     await myPingChannel.send(message).catch((error) => {
       logger.error(`An error occurred when trying to ping channel ${myPingChannel.name}`);
@@ -254,7 +282,7 @@ async function sendOpRemovedPing(operation: FleetUpOperationData) {
 }
 
 function sendOpEditPing(operation: FleetUpOperationData) {
-  if (botConfig.get('operationEdited')) {
+  if (config.get('operationEdited')) {
     let message = '@everyone';
     message += '\n';
     message += '**A posted operation was edited, re-check the time and place!**';
@@ -269,7 +297,7 @@ function sendOpEditPing(operation: FleetUpOperationData) {
 }
 
 function sendAheadPing(operation: FleetUpOperationData) {
-  if (botConfig.get('operationStartSoon')) {
+  if (config.get('operationStartSoon')) {
     let message = '@everyone';
     message += '\n';
     message += '**An operation will start in 2 hours!**';
@@ -284,7 +312,7 @@ function sendAheadPing(operation: FleetUpOperationData) {
 }
 
 function sendOpStartPing(operation: FleetUpOperationData) {
-  if (botConfig.get('operationStarting')) {
+  if (config.get('operationStarting')) {
     let message = '@everyone';
     message += '\n';
     message += '**An operation is underway, join join join!**';
