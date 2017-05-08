@@ -11,6 +11,8 @@ This bot needs to be self-hosted and requires NodeJS 7
 2. Create a new App, give it a name and picture. The "redirect URL" is not needed. Click "Create App".
 3. Click on "Create a Bot User" and confirm.
 4. Click the link next to "Token" to reveal your bot token, you will need it later.
+5. Invite the bot to your server by placing the bot's Client ID in this link: `https://discordapp.com/oauth2/authorize?client_id=PLACE_CLIENT_ID_HERE&scope=bot`
+6. Paste the link in your web browser and follow the steps on the Discord website.
 
 #### Step two: Installing the bot
 1. Clone this repository to a directory of your choice.
