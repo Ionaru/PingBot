@@ -22,7 +22,7 @@ const pings: { [id: number]: Array<Timer> } = {};
 let myPingChannel: Discord.TextChannel;
 
 const checkInterval = 10 * 60 * 1000; // 10 minutes
-const aheadPingTime = 2 * 60 * 60 * 1000; // 2 hours
+let aheadPingTime: number;
 
 async function activate() {
   programLogger.logger = new Logger();
@@ -32,6 +32,8 @@ async function activate() {
   config = new Config('config');
 
   const token = config.get('token');
+
+  aheadPingTime = Number(config.get('hoursAmount')) * 60 * 60 * 1000;
 
   client = new Discord.Client();
   client.login(token);
@@ -151,7 +153,7 @@ function scheduleWarnings() {
       } else {
         pings[operationId] = [];
       }
-      if (timeTillOpStart - aheadPingTime > 0) {
+      if (aheadPingTime && timeTillOpStart - aheadPingTime > 0) {
         pings[operationId].push(setTimeout(sendAheadPing, timeTillOpStart - aheadPingTime, operation));
       }
       if (timeTillOpStart > 0) {
@@ -175,6 +177,13 @@ function getPingChannel() {
 
 function parseFleetUpTime(timeString: string): Date {
   return new Date(Number(timeString.replace(/\D+/g, '')));
+}
+
+function pluralize(singular: string, plural: string, amount: number): string {
+  if (amount === 1) {
+    return singular;
+  }
+  return plural;
 }
 
 function getFleetMoment(timeDate: Date): string {
@@ -226,7 +235,7 @@ function opMessageInfo(operation: FleetUpOperationData) {
     message += `FleetUp link: **<https://fleet-up.com/Operation#${operation.Id}>**`;
   }
 
-  if(message.length === 0) {
+  if (message.length === 0) {
     logger.warn(`Ping for fleet ${operation.Subject} (${operation.Id}) contained no information and is probably not useful.`);
   }
 
@@ -298,9 +307,11 @@ function sendOpEditPing(operation: FleetUpOperationData) {
 
 function sendAheadPing(operation: FleetUpOperationData) {
   if (config.get('operationStartSoon')) {
+    const pingHours = Number(config.get('hoursAmount'));
+    const hourWord = pluralize('hour', 'hours', pingHours);
     let message = '@everyone';
     message += '\n';
-    message += '**An operation will start in 2 hours!**';
+    message += `**An operation will start in ${pingHours} ${hourWord}!**`;
     message += '\n\n';
     message += opMessageInfo(operation);
 
