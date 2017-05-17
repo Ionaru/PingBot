@@ -6,17 +6,27 @@ The purpose of this bot is to give people notifications of upcoming operations o
 ## What it does
 PingBot will post messages in a single channel with information on upcoming FleetUp operations. It does this by polling the FleetUp API every couple of minutes and looking for changes in the response.
 
+PingBot can send alerts for a number of actions done on FleetUp, here are the triggers:
+* A new operation is created
+* An existing operation was edited
+* An existing operation was deleted
+* An operation is starting in N hours (amount of hours is configurable)
+* An operation is about to start
+
+All triggers can be turned off and on individually in the configuration.
+
+The notification this bot sends, can contain the following parts:
+* The fleet name & starting time
+* The location the fleet will form in
+* The fleet doctrines
+* The 'additional information' link
+* The FleetUp link
+
+All message parts can be turned off and on individually in the configuration.
+
 Here's an example message:
 
 ![example image of PingBot](https://cloud.githubusercontent.com/assets/3472373/26179692/6e4a15da-3b65-11e7-8266-272aae2298cf.png)
-
-In the message, PingBot can put information on the fleet's name, start time, form location, doctrines, info url, and FleetUp url. All of these can be turned on or off in the config.
-
-PingBot can send alerts for a number of actions done on FleetUp, these include the creation of a new operation, an edit of an existing operation and deletion of an operation. All of these can be turned on or off in the config.
-
-When an operation is about to start, PingBot can send a warning about the upcoming operation a configurable number of hours before the operation starts.
-
-Finally, PingBot can also optionally send a notification when a fleet is about to start (see screenshot above).
 
 ## Usage
 This bot needs to be self-hosted and requires NodeJS 7
