@@ -42,7 +42,7 @@ This bot needs to be self-hosted and requires NodeJS 7
 #### Part two: Installing the bot
 1. Install [NodeJS 7](https://nodejs.org/en/download/current/).
 2. Clone this repository to a directory of your choice and enter that directory.
-3. Install dependencies with `npm install` or `yarn` if installed.
+3. Install dependencies with `npm install`. (Or `yarn`, if installed).
 4. Go to the config folder, rename `example-config.ini` to `config.ini` and fill in all fields, this is where you use your bot token.
 5. Go back to the main folder and run `npm start`.
 
