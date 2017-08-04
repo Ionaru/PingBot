@@ -1,14 +1,9 @@
 import * as Discord from 'discord.js';
 import * as moment from 'moment';
 import { FleetUpData, FleetUpOperationData, OperationData } from './typings';
-import { Logger, logger } from './helpers/program-logger';
+import { logger, WinstonPnPLogger } from 'winston-pnp-logger';
 import { Config } from './helpers/config';
 import fetch from 'node-fetch';
-import path = require('path');
-import programLogger = require('./helpers/program-logger');
-import fs = require('fs');
-import ini = require('ini');
-import configService = require('./helpers/config');
 import Timer = NodeJS.Timer;
 
 let client: Discord.Client;
@@ -25,7 +20,9 @@ const checkInterval = 10 * 60 * 1000; // 10 minutes
 let aheadPingTime: number;
 
 async function activate() {
-  programLogger.logger = new Logger();
+  new WinstonPnPLogger({
+    logDir: '../logs'
+  });
 
   logger.info('Bot has awoken, loading configuration');
 
@@ -146,6 +143,8 @@ function scheduleWarnings() {
     if (operations.hasOwnProperty(operationId)) {
       const operation = operations[operationId];
       const timeTillOpStart = parseFleetUpTime(operation.Start).getTime() - Date.now();
+      const timeTillPingTime = timeTillOpStart - aheadPingTime;
+
       if (pings[operationId]) {
         for (const timer of pings[operationId]) {
           clearTimeout(timer);
@@ -153,10 +152,11 @@ function scheduleWarnings() {
       } else {
         pings[operationId] = [];
       }
-      if (aheadPingTime && timeTillOpStart - aheadPingTime > 0) {
-        pings[operationId].push(setTimeout(sendAheadPing, timeTillOpStart - aheadPingTime, operation));
+
+      if (aheadPingTime && timeTillPingTime < checkInterval && timeTillPingTime > 0) {
+        pings[operationId].push(setTimeout(sendAheadPing, timeTillPingTime, operation));
       }
-      if (timeTillOpStart > 0) {
+      if (timeTillOpStart < checkInterval && timeTillOpStart > 0) {
         pings[operationId].push(setTimeout(sendOpStartPing, timeTillOpStart, operation));
       }
     }

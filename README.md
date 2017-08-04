@@ -4,7 +4,7 @@
 The purpose of this bot is to give people notifications of upcoming fleets
 
 ## Usage
-This bot needs to be self-hosted and requires NodeJS 7
+This bot needs to be self-hosted and requires NodeJS 8
 
 #### Step one: Creating a bot user
 1. Go to [discordapp.com/developers/applications/me](discordapp.com/developers/applications/me).

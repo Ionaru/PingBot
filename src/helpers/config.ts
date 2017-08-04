@@ -1,7 +1,7 @@
 import fs = require('fs');
 import ini = require('ini');
 import path = require('path');
-import { logger } from './program-logger';
+import { logger } from 'winston-pnp-logger';
 
 export const configPath = path.join(__dirname, '../../config/');
 
