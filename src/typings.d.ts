@@ -1,13 +1,13 @@
-export interface FleetUpData {
+export interface IFleetUpData {
   Success: boolean;
   Message: string;
   CachedUntilUTC: string;
   CachedUntilString: string;
   Code: number;
-  Data: Array<FleetUpOperationData>;
+  Data: IFleetUpOperationData[];
 }
 
-export interface FleetUpOperationData {
+export interface IFleetUpOperationData {
   Id: number;
   OperationId: number;
   Subject: string;
@@ -29,6 +29,6 @@ export interface FleetUpOperationData {
   }>;
 }
 
-export interface OperationData {
-  [id: number]: FleetUpOperationData;
+export interface IOperationData {
+  [id: number]: IFleetUpOperationData;
 }

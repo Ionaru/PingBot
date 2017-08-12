@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "lint": "tslint --type-check -c tslint.json \"src/**/*.ts\""
+    "lint": "tslint --type-check -c tslint.json \"src/**/*.ts\" --project ./tsconfig.json"
   },
   "dependencies": {
     "discord.js": "^11.0.0",
