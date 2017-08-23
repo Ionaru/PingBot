@@ -44,6 +44,24 @@ async function announceReady() {
   if (myPingChannel) {
     logger.info(`Server: ${myPingChannel.guild.name}`);
     logger.info(`Channel: ${myPingChannel.name}`);
+
+    if (config.getConfigProperty('announceSelf')) {
+      const message = `<@${client.user.id}> reporting for fleet-ping duty **o7**`;
+
+      myPingChannel.send(message).catch((error) => {
+        let errorText = `Unable to send a message to channel ${myPingChannel.name}.`;
+        if(error.toString().indexOf('Missing Permissions') > -1) {
+          errorText += ' Looks like a problem with permissions on Discord.';
+        } else if(error.toString().indexOf('Missing Access') > -1) {
+          errorText += ' Looks like the bot was unable to join the Discord channel.';
+        }
+
+        logger.error(errorText);
+        logger.error(error);
+        deactivate(true, true).then();
+      });
+    }
+
     const fleetUpAppKey = config.getConfigProperty('app-key');
     const fleetUpUserId = config.getConfigProperty('user-id');
     const fleetUpApiCode = config.getConfigProperty('api-code');
@@ -78,14 +96,20 @@ async function announceReady() {
   });
 }
 
-export async function deactivate(exitProcess: boolean) {
-  logger.info('Quitting!');
+export async function deactivate(exitProcess: boolean, error = false) {
+  let quitMessage = 'Quitting';
+  if(error) {
+    quitMessage += ' because of an error'
+  }
+  quitMessage += '!';
+
+  logger.info(quitMessage);
   if (client) {
     await client.destroy();
     client = null;
     logger.info('Client destroyed');
   }
-  logger.info('Done!');
+  logger.info('Shutdown success!');
   if (exitProcess) {
     process.exit(0);
   }
@@ -344,7 +368,7 @@ process.on('unhandledRejection', (reason: string, p: Promise<any>): void => {
 });
 process.on('uncaughtException', (error) => {
   logger.error(error.message);
-  deactivate(true).then();
+  deactivate(true, true).then();
 });
 process.on('SIGINT', () => {
   deactivate(true).then();
