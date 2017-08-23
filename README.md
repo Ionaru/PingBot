@@ -32,7 +32,7 @@ Here's an example message:
 This bot needs to be self-hosted and requires NodeJS 8
 
 #### Part one: Creating a bot user
-1. Go to [discordapp.com/developers/applications/me](discordapp.com/developers/applications/me).
+1. Go to [discordapp.com/developers/applications/me](https://discordapp.com/developers/applications/me).
 2. Create a new App, give it a name and picture. The "redirect URL" is not needed. Click "Create App".
 3. Click on "Create a Bot User" and confirm.
 4. Click the link next to "Token" to reveal your bot token, you will need it later.
@@ -40,10 +40,10 @@ This bot needs to be self-hosted and requires NodeJS 8
 6. Paste the link in your web browser and follow the steps on the Discord website.
 
 #### Part two: Installing the bot
-1. Install [NodeJS 7](https://nodejs.org/en/download/current/).
+1. Install [NodeJS](https://nodejs.org/en/download/current/).
 2. Clone this repository to a directory of your choice and enter that directory.
 3. Install dependencies with `npm install`. (Or `yarn`, if installed).
-4. Go to the config folder, rename `example-config.ini` to `config.ini` and fill in all fields, this is where you use your bot token.
+4. Go to the config folder, copy `example-config.ini`, rename the copy to `config.ini` and fill in all fields, this is where you use your bot token.
 5. Go back to the main folder and run `npm start`.
 
 Contact me in EVE Online: `Ionaru Otsada` or on Discord: `Ionaru#3801` if you need any assistance.
