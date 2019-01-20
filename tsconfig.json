@@ -8,7 +8,7 @@
     "mapRoot": "./",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "../dist/out-tsc",
+    "outDir": "dist",
     "sourceMap": true,
     "target": "es6",
     "typeRoots": [

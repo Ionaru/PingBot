@@ -11,6 +11,7 @@ npm-debug.log*
 /config/token.txt
 /data/typeIDs.yaml
 /logs/
+/dist/
 /config/config.ini
 
 # System files

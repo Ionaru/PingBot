@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
+    "build": "tsc --skipLibCheck --project tsconfig.json",
     "lint": "tslint --type-check -c tslint.json \"src/**/*.ts\" --project ./tsconfig.json"
   },
   "dependencies": {
